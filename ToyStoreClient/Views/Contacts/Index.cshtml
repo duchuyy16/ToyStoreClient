@@ -1,0 +1,39 @@
+﻿@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+<div class="container">
+    <h1 class="text-center mt-5" style="font-size: 48px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; line-height: 1.2;">Contact Us</h1>
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-6 mb-5">
+            <form action="/Contacts/Contact" method="POST">
+                <div class="mb-3">
+                    <label asp-for="ContactName" class="form-label">Name</label>
+                    <input asp-for="ContactName" type="text" class="form-control" placeholder="Enter your name">
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Message" class="form-label">Message</label>
+                    <textarea asp-for="Message" class="form-control" rows="5" placeholder="Enter your message"></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-dark">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Tạo đoạn javascript để hiển thị thông báo -->
+<script>
+    swal({
+        title: "Success!",
+        text: "Your message has been sent.",
+        type: "success",
+        confirmButtonColor: "#27ae60"
+    });
+</script>

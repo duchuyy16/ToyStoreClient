@@ -1,0 +1,92 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@{
+    ViewData["Title"] = "GetAllProducts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .pagination-container {
+        display: flex;
+        flex: 1;
+    }
+
+    .pagination {
+        display: flex;
+        flex: 1;
+        list-style: none;
+        padding: 0;
+        gap: .625rem;
+    }
+
+    .page-item, .page-link {
+        height: 2rem;
+        width: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .PagedList-pageCountAndLocation {
+        justify-content: space-between;
+        order: -1;
+        flex: 1;
+        /*expands the div to max available width*/
+    }
+</style>
+<!-- Section-->
+<section class="py-5">
+    <h1 class="text-center mt-5" style="font-size: 48px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; line-height: 1.2;">All Products</h1>
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            @foreach (ProductModel item in Model)
+            {
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Sale badge-->
+                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale @item.Discount%</div>
+                    <!-- Product image-->
+                    <img class="card-img-top" src="/assets/img/@item.Image" alt="..." />
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">
+                                <a href="@Url.Action("GetProductDetails", "Products", new { id = item.ProductId })" style="color:black;text-decoration:none;">@item.ProductName</a>
+                            </h5>
+                            <!-- Product price-->
+                            <span class="text-muted text-decoration-line-through">$@item.Price</span>
+                            @{
+                            decimal finalPrice = (item.Price-(item.Price*item.Discount/100)!).Value;
+                            string finalPriceFormatted = finalPrice  !.ToString("#,##0.00");
+                            }
+                            <span class="fw-bolder">$@finalPriceFormatted </span>
+
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        <div class="row mt-5">
+            @Html.PagedListPager((IPagedList)Model,
+            pageNo => Url.Action("GetAllProducts", new { pageNo }),
+            new PagedListRenderOptions{
+            PageClasses = new string[] { "page-link" },
+            UlElementClasses = new string[] { "pagination" },
+            LiElementClasses = new string[] { "page-item" },
+            DisplayItemSliceAndTotal = true,
+            DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded
+            }
+            )
+        </div>
+    </div>
+</section>
+

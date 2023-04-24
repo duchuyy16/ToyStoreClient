@@ -1,0 +1,77 @@
+﻿@model ToyStoreClient.Models.ProductModel
+
+@{
+    ViewData["Title"] = @Model.ProductName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <h2 class="fw-bolder mb-4">Product Details</h2>
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="~/assets/img/@Model.Image" alt="..." /></div>
+            <div class="col-md-6">
+                <h5 class="display-6 fw-bolder">@Model.ProductName</h5>
+                <div class="small mb-1">Category: @Model.Category.CategoryName</div>
+                <div class="small mb-1">ModelYear: @Model.ModelYear </div>
+                <div class="fs-3 mb-3">
+                    <span class="text-decoration-line-through">$@Model.Price</span>
+                    @{
+                        decimal finalPrice = (Model.Price - (Model.Price * Model.Discount / 100)!).Value;
+                        string finalPriceFormatted = finalPrice!.ToString("#,##0.00");
+                    }
+                    <span class="fw-bolder">$@finalPriceFormatted</span>
+                </div>
+                <h6 class="display-6 fw-bolder">Details</h6>
+                <p class="lead">@Model.Description</p>
+                <div class="d-flex">
+                    <input class="form-control text-center me-3" id="inputQuantity" type="number" min="1" max="10" value="1" style="max-width: 3rem" />
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Add to cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Related items section-->
+<section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4">Best Sellers</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            @foreach (ProductModel item in ViewBag.Products)
+            {
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Sale badge-->
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale @item.Discount%</div>
+                        <!-- Product image-->
+                        <img class="card-img-top" src="/assets/img/@item.Image" alt="..." />
+                        <!-- Product details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <h5 class="fw-bolder">
+                                    <a href="@Url.Action("GetProductDetails", "Products", new { id = item.ProductId })" style="color:black;text-decoration:none;">@item.ProductName</a>
+                                </h5>
+                                <!-- Product price-->
+                                <span class="text-muted text-decoration-line-through">$@item.Price</span>
+                                @{
+                                    decimal finalPrice1 = (item.Price - (item.Price * item.Discount / 100)!).Value;
+                                    string finalPriceFormatted1 = finalPrice1!.ToString("#,##0.00");
+                                }
+                                <span class="fw-bolder">$@finalPriceFormatted1</span>
+                            </div>
+                        </div>
+                        <!-- Product actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
