@@ -1,0 +1,207 @@
+﻿@model IEnumerable<ToyStoreClient.Models.ProductModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .pagination-container {
+        display: flex;
+        flex: 1;
+        margin: 12px;
+    }
+
+    .pagination {
+        display: flex;
+        flex: 1;
+        list-style: none;
+        padding: 0;
+        gap: .625rem;
+    }
+
+    .page-item, .page-link {
+        height: 2rem;
+        width: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .PagedList-pageCountAndLocation {
+        justify-content: space-between;
+        order: -1;
+        flex: 1;
+    }
+
+    .search-form {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .product-management-buttons{
+        margin:12px;
+    }
+</style>
+<div class="product-management-buttons">
+    <div class="row mb-3">
+        <div>
+            <a class="btn btn-primary" asp-action="Create"><i class="fas fa-plus fa-sm"></i> Create New</a>
+        </div>
+        &nbsp
+        <div>
+            <a class="btn btn-info" asp-action="ExportToExcel"><i class="fas fa-download fa-sm text-white-50"></i> Generate Excel Product List</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List Of Products</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row mb-3">
+                    <div class="col-sm-12 col-md-6">
+                        <form asp-controller="ProductAdmin" asp-action="Index" method="get" class="form-inline flex-fill">
+                            <div class="form-group">
+                                <select asp-items="ViewBag.CategoryId" name="categoryId" onchange="this.form.submit()" class="form-control"></select>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 d-flex">
+                        <form asp-controller="ProductAdmin" asp-action="SearchByName" method="get" class="form-inline search-form flex-fill">
+                            <div class="form-group">
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Enter Product Name">
+                            </div>
+                            <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-search"></i> Search</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ProductId)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ProductName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Price)
+                                    </th>
+                                    @*<th>
+                                    @Html.DisplayNameFor(model => model.ModelYear)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Discount)
+                                    </th>
+                                    @*<th>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Image)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CategoryId)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ProductId)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ProductName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Price)
+                                    </th>
+                                    @*<th>
+                                    @Html.DisplayNameFor(model => model.ModelYear)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Discount)
+                                    </th>
+                                    @*<th>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Image)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CategoryId)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ProductId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ProductName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Price)
+                                        </td>
+                                        @*<td>
+                                    @Html.DisplayFor(modelItem => item.ModelYear)
+                                    </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Discount)
+                                        </td>
+                                        @*<td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                    </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Image)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CategoryId)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-success" asp-action="Edit" asp-route-id="@item.ProductId" data-toggle="tooltip" title="Edit item"><i class="fas fa-edit"></i></a>
+                                            <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@item.ProductId" data-toggle="tooltip" title="Detail item"><i class="fas fa-info-circle"></i></a>
+                                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProductId" data-toggle="tooltip" title="Delete item"><i class="fas fa-trash"></i></a>
+                                            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @Html.PagedListPager((IPagedList)Model,
+                    pageNo => Url.Action("Index","ProductAdmin", new { pageNo, area="Admin" }),
+                    new PagedListRenderOptions{
+                    PageClasses = new string[] { "page-link" },
+                    UlElementClasses = new string[] { "pagination" },
+                    LiElementClasses = new string[] { "page-item" },
+                    DisplayItemSliceAndTotal = true,
+                    DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                    DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+                    DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded
+                    }
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

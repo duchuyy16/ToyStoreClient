@@ -39,41 +39,50 @@
 <section class="py-5">
     <h1 class="text-center mt-5" style="font-size: 48px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; line-height: 1.2;">All Products</h1>
     <div class="container px-4 px-lg-5 mt-5">
+        <div class="row mb-1">
+            <div class="col-sm-6 col-md-3 d-flex mb-3">
+                <form asp-controller="Products" asp-action="GetAllProducts" method="get" class="form-inline">
+                    <div class="form-group">
+                        <select asp-items="ViewBag.CategoryId" name="categoryId" onchange="this.form.submit()" class="form-control"></select>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             @foreach (ProductModel item in Model)
             {
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Sale badge-->
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale @item.Discount%</div>
-                    <!-- Product image-->
-                    <img class="card-img-top" src="/assets/img/@item.Image" alt="..." />
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">
-                                <a href="@Url.Action("GetProductDetails", "Products", new { id = item.ProductId })" style="color:black;text-decoration:none;">@item.ProductName</a>
-                            </h5>
-                            <!-- Product price-->
-                            <span class="text-muted text-decoration-line-through">$@item.Price</span>
-                            @{
-                            decimal finalPrice = (item.Price-(item.Price*item.Discount/100)!).Value;
-                            string finalPriceFormatted = finalPrice  !.ToString("#,##0.00");
-                            }
-                            <span class="fw-bolder">$@finalPriceFormatted </span>
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Sale badge-->
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale @item.Discount%</div>
+                        <!-- Product image-->
+                        <img class="card-img-top" src="/assets/img/@item.Image" alt="..." />
+                        <!-- Product details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <h5 class="fw-bolder">
+                                    <a href="@Url.Action("GetProductDetails", "Products", new { id = item.ProductId })" style="color:black;text-decoration:none;">@item.ProductName</a>
+                                </h5>
+                                <!-- Product price-->
+                                <span class="text-muted text-decoration-line-through">$@item.Price</span>
+                                @{
+                                    decimal finalPrice = (item.Price - (item.Price * item.Discount / 100)!).Value;
+                                    string finalPriceFormatted = finalPrice!.ToString("#,##0.00");
+                                }
+                                <span class="fw-bolder">$@finalPriceFormatted </span>
 
+                            </div>
+                        </div>
+                        <!-- Product actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@item.ProductId" asp-route-quantity="1">Add to cart</a></div>
                         </div>
                     </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                    </div>
                 </div>
-            </div>
             }
         </div>
-        <div class="row mt-5">
+        <div class="row mt-3">
             @Html.PagedListPager((IPagedList)Model,
             pageNo => Url.Action("GetAllProducts", new { pageNo }),
             new PagedListRenderOptions{

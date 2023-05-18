@@ -26,7 +26,6 @@ namespace ToyStoreClient.Controllers
                 return View(model);
             }
 
-            // Xử lý thông tin liên hệ ở đây
             Utilities.SendDataRequest<ContactModel>(ConstantValues.Contact.AddContact, model);
 
             return RedirectToAction("Index");

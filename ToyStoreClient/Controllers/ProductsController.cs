@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ToyStoreClient.Helpers;
 using ToyStoreClient.Models;
 using X.PagedList;
@@ -14,6 +15,7 @@ namespace ToyStoreClient.Controllers
 
         public IActionResult SearchByProductName(string name)
         {
+            ViewBag.Name = name;
             if (!string.IsNullOrEmpty(name))
             {
                 var url = string.Format(ConstantValues.Product.SearchByProductName, name);
@@ -26,18 +28,31 @@ namespace ToyStoreClient.Controllers
             }
         }
 
-        public IActionResult GetAllProducts(int pageNo=1)
-        {         
+        public IActionResult GetAllProducts(int? categoryId, int pageNo = 1)
+        {
             try
             {
-                var products = Utilities.SendDataRequest<List<ProductModel>>(ConstantValues.Product.GetAllProducts);
-                var pagedList = products.ToPagedList(pageNo, 8);
-                return View(pagedList);
+                var categories = Utilities.SendDataRequest<List<CategoryModel>>(ConstantValues.Category.GetAllCategories);
+                categories.Insert(0, new CategoryModel { CategoryId = 0, CategoryName = "Please select a category" });
+                ViewBag.CategoryId = new SelectList(categories, "CategoryId", "CategoryName", categoryId);
+                if (categoryId == null)
+                {
+                    var products = Utilities.SendDataRequest<List<ProductModel>>(ConstantValues.Product.GetAllProducts);
+                    var pagedList = products.ToPagedList(pageNo, 8);
+                    return View(pagedList);
+                }
+                else
+                {
+                    var products = Utilities.SendDataRequest<List<ProductModel>>(ConstantValues.Product.GetAllProducts);
+                    var pagedList = products.Where(x => x.CategoryId == categoryId).ToPagedList(pageNo, 8);
+                    return View(pagedList);
+                }
             }
             catch (Exception)
             {
                 return BadRequest();
             }
+
         }
 
         public IActionResult GetProductDetails(int id)

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<ToyStoreClient.Models.CategoryModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .product-management-buttons{
+        margin:12px;
+    }
+</style>
+<div class="product-management-buttons">
+    <div class="row mb-3">
+        <div>
+            <a class="btn btn-primary" asp-action="Create"><i class="fas fa-plus fa-sm"></i> Create New</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List Of Categories</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CategoryId)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CategoryName)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CategoryId)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CategoryName)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CategoryId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CategoryName)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-success" asp-action="Edit" asp-route-id="@item.CategoryId" data-toggle="tooltip" title="Edit item"><i class="fas fa-edit"></i></a>
+                                            <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@item.CategoryId" data-toggle="tooltip" title="Detail item"><i class="fas fa-info-circle"></i></a>
+                                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.CategoryId" data-toggle="tooltip" title="Delete item"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

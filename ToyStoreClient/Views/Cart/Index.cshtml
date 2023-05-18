@@ -1,0 +1,94 @@
+﻿@model IEnumerable<CartItem>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container py-5">
+    <h1 class="text-center mt-5" style="font-size: 48px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; line-height: 1.2;"><i class="bi-cart-fill me-1"></i>Cart</h1>
+    @if (ViewData["Cart"] != null)
+    {
+        <div class="shopping-cart mt-4">
+            <table class="table table-bordered table-hover">
+                <thead class="bg-light">
+                    <tr>
+                        <th scope="col">Product Name</th>
+                        <th scope="col" class="text-center">Quantity</th>
+                        <th scope="col" class="text-center">Sale Price</th>
+                        <th scope="col" class="text-center">Discount</th>
+                        <th scope="col" class="text-center">Total</th>
+                        <th scope="col" class="text-center">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (CartItem item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="product-item">
+                                    <a class="product-thumb" style="display: inline-block;"><img src="~/assets/img/@item.Image" alt="Product" height="120px;" width="120px;"></a>
+                                    <div class="product-info" style="display: inline-block;">
+                                        <h6 class="product-title">@item.ProductName</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center" @*style="text-align: center;"*@ style="display:table-cell;vertical-align:middle;" >
+                                <form method="post" asp-action="UpdateCartItem" class="text-center" style="display: inline-block;">
+                                    <div class="input-group">
+                                        <input type="hidden" name="id" value="@item.ProductId" />
+                                        <input type="number" class="form-control" name="quantity" min="1" max="10" value="@item.Quantity" style="max-width: 3rem">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td class="text-center text-lg text-medium" style="display:table-cell;vertical-align:middle;">
+                                $@item.Price.ToString("#,##0.00")
+                            </td>
+                            <td class="text-center"  style="display:table-cell;vertical-align:middle;">@item.Discount%</td>
+                            <td class="text-center"  style="display:table-cell;vertical-align:middle;">$@item.Total.ToString("#,##0.00")</td>
+                            <td class="text-center"  style="display:table-cell;vertical-align:middle;">
+                                <a class="btn btn-sm btn-outline-danger" asp-action="RemoveFromCart" asp-controller="Cart" asp-route-id="@item.ProductId" data-toggle="tooltip" title="Remove item"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <hr />
+            <div class="shopping-cart-footer mt-4">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-4">
+                        <form class="coupon-form" method="post">
+                            <div class="input-group">
+                                <input class="form-control" type="text" placeholder="Coupon code" required="">
+                                <button class="btn btn-primary" type="submit">Apply Coupon</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <h4>Subtotal: $<span class="text-medium">@Model.Sum(s=>s.Total).ToString("#,##0.00")</span></h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shopping-cart-footer mt-4">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-4 mb-3 mb-lg-0">
+                        <a class="btn btn-outline-secondary" asp-action="GetAllProducts" asp-controller="Products"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a class="btn btn-success" asp-action="CheckOut" asp-controller="Cart">Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            Your cart is empty. Please <a href="@Url.Action("Index", "Home")" class="alert-link">continue shopping</a> or go back to <a href="@Url.Action("Index", "Home")" class="alert-link">homepage</a>.
+        </div>
+    }
+</div>
+

@@ -33,6 +33,31 @@ namespace ToyStoreClient.Helpers
             return result;
         }
 
+        //public static T SendDataRequest<T>(string apiUrl, object? input = null, string token = null!)
+        //{
+        //    HttpClient client = new HttpClient();
+        //    client.BaseAddress = new Uri("https://localhost:44322/");
+        //    client.DefaultRequestHeaders.Accept.Clear();
+
+        //    if (!string.IsNullOrEmpty(token))
+        //    {
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //    }
+
+        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        //    HttpResponseMessage response = client.PostAsJsonAsync(apiUrl, input).Result;
+        //    T result = default(T)!;
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        result = response.Content.ReadFromJsonAsync<T>().Result!;
+        //    }
+
+        //    return result;
+        //}
+
+
         //public static DataTable GetTable<TEntity>(List<TEntity> table, string name) where TEntity : class
         //{
         //    var offset = 78;

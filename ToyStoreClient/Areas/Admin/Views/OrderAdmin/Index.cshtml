@@ -1,0 +1,137 @@
+﻿@model IEnumerable<ToyStoreClient.Models.OrderModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .pagination-container {
+        display: flex;
+        flex: 1;
+        margin: 12px;
+    }
+
+    .pagination {
+        display: flex;
+        flex: 1;
+        list-style: none;
+        padding: 0;
+        gap: .625rem;
+    }
+
+    .page-item, .page-link {
+        height: 2rem;
+        width: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .PagedList-pageCountAndLocation {
+        justify-content: space-between;
+        order: -1;
+        flex: 1;
+    }
+    .product-management-buttons {
+        margin: 12px;
+    }
+</style>
+<div class="product-management-buttons">
+    <div class="row mb-3">
+        <div>
+            <a class="btn btn-primary" asp-action="Create"><i class="fas fa-plus fa-sm"></i> Create New</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List Of Orders</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.OrderId)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.OrderDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EstimatedDeliveryDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.StatusId)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.OrderId)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.OrderDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EstimatedDeliveryDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.StatusId)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OrderId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OrderDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EstimatedDeliveryDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StatusId)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-success" asp-action="Edit" asp-route-id="@item.OrderId" data-toggle="tooltip" title="Edit item"><i class="fas fa-edit"></i></a>
+                                            <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@item.OrderId" data-toggle="tooltip" title="Detail item"><i class="fas fa-info-circle"></i></a>
+                                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.OrderId" data-toggle="tooltip" title="Delete item"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    @Html.PagedListPager((IPagedList)Model,
+                    pageNo => Url.Action("Index","OrderAdmin", new { pageNo, area="Admin" }),
+                    new PagedListRenderOptions{
+                    PageClasses = new string[] { "page-link" },
+                    UlElementClasses = new string[] { "pagination" },
+                    LiElementClasses = new string[] { "page-item" },
+                    DisplayItemSliceAndTotal = true,
+                    DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                    DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+                    DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded
+                    }
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
