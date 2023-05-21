@@ -26,10 +26,10 @@
             public const string ExistsById = "api/Categories/ExistsById/{0}"; 
             //public const string ThongKeSanPhamTheoTheLoai = "api/ThongKe/ThongKeSanPhamTheoTheLoai";
         }
-        public class User
-        {
-            public const string GetAllUsers = "api/Users/GetAllUsers";
-        }
+        //public class User
+        //{
+        //    public const string GetAllUsers = "api/Users/GetAllUsers";
+        //}
         public class Status
         {
             public const string GetAllStatuses = "api/Statuses/GetAllStatuses";

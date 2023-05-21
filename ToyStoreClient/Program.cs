@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using ToyStoreClient.ApiServices;
 using ToyStoreClient.Services;
 using ToyStoreClient.Services.Interfaces;
 
@@ -7,14 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.SlidingExpiration = true;
-        options.AccessDeniedPath = "/Forbidden/";
-    });
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -29,6 +22,8 @@ builder.Services.AddHttpContextAccessor();
 //Đếm sp trong giỏ hàng
 builder.Services.AddScoped<ICart, Cart>();
 
+builder.Services.AddScoped<Client>(s => new Client("https://localhost:44350"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,21 +33,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
-app.UseAuthentication();
-app.UseSession();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthorization();
-
-app.MapGet("/auth", () => "This endpoint requires authorization")
-   .RequireAuthorization();
+//app.UseAuthorization();
+//app.UseAuthentication();
+app.UseSession();
 
 app.MapRazorPages();
-app.MapDefaultControllerRoute();
 
 app.MapAreaControllerRoute(
     name: "MyAreaAdmin",

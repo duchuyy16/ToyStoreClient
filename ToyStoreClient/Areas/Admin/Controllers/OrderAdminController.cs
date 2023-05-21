@@ -39,10 +39,10 @@ namespace ToyStoreClient.Areas.Admin.Controllers
             ViewData["StatusId"] = new SelectList(Utilities.SendDataRequest<List<StatusModel>>(ConstantValues.Status.GetAllStatuses), "StatusId", "StatusName");
             return View();
         }
-    
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("OrderId,OrderDate,EstimatedDeliveryDate,StatusId")] OrderModel orderModel)
+        public IActionResult Create([Bind("OrderId,CustomerName,CustomerEmail,CustomerPhone,CustomerAddress,OrderDate,EstimatedDeliveryDate,StatusId")] OrderModel orderModel)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace ToyStoreClient.Areas.Admin.Controllers
       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("OrderId,OrderDate,EstimatedDeliveryDate,StatusId")] OrderModel order)
+        public IActionResult Edit(int id, [Bind("OrderId,CustomerName,CustomerEmail,CustomerPhone,CustomerAddress,OrderDate,EstimatedDeliveryDate,StatusId")] OrderModel order)
         {
             if (id != order.OrderId)
             {

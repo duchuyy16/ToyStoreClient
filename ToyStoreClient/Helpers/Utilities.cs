@@ -12,12 +12,19 @@ namespace ToyStoreClient.Helpers
 {
     public class Utilities
     {
-        public static T SendDataRequest<T>(string APIUrl, object? input = null)
+        public static T SendDataRequest<T>(string APIUrl, object? input = null, string token="")
         {
             HttpClient client = new();
             client.BaseAddress = new System.Uri("https://localhost:44350");
             client.DefaultRequestHeaders.Accept.Clear();
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            //client.DefaultRequestHeaders.Add("Bearer ", token);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            
 
             HttpResponseMessage response = client.PostAsJsonAsync(APIUrl, input).Result;
             T result = default!;
@@ -30,10 +37,17 @@ namespace ToyStoreClient.Helpers
                     return returnData;
                 }
             }
+            else
+            {
+                // Xử lý lỗi
+                var statusCode = response.StatusCode;
+                var reasonPhrase = response.ReasonPhrase;
+                var content = response.Content.ReadAsStringAsync().Result;
+            }
             return result;
         }
 
-        //public static T SendDataRequest<T>(string apiUrl, object? input = null, string token = null!)
+        //public static T SendDataRequest<T>(string apiUrl, object? input = null, string token = null!, string token = "")
         //{
         //    HttpClient client = new HttpClient();
         //    client.BaseAddress = new Uri("https://localhost:44322/");
@@ -44,6 +58,7 @@ namespace ToyStoreClient.Helpers
         //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         //    }
 
+        //client.DefaultRequestHeaders.Add("Bearer ", token);
         //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         //    HttpResponseMessage response = client.PostAsJsonAsync(apiUrl, input).Result;

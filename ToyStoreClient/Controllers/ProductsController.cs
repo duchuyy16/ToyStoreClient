@@ -13,13 +13,14 @@ namespace ToyStoreClient.Controllers
             return View();
         }
 
-        public IActionResult SearchByProductName(string name)
+        public IActionResult SearchByProductName(string keyword)
         {
-            ViewBag.Name = name;
-            if (!string.IsNullOrEmpty(name))
+            ViewBag.Name = keyword;
+            if (!string.IsNullOrEmpty(keyword))
             {
-                var url = string.Format(ConstantValues.Product.SearchByProductName, name);
-                var products = Utilities.SendDataRequest<List<ProductModel>>(url);
+                //var accessToken = HttpContext.Session.Get("Token");
+                var url = string.Format(ConstantValues.Product.SearchByProductName, keyword);
+                var products = Utilities.SendDataRequest<List<ProductModel>>(url/*, null, accessToken!*/);
                 return View(products);
             }
             else

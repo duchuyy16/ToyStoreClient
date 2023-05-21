@@ -1,13 +1,15 @@
 ﻿@using ToyStoreClient.Services.Interfaces
-@inject ICart _IGetAllCarts
+@inject ICart _iCart
+
 @{
     double total = 0;
     ViewData["Title"] = "CheckOut";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" rel="stylesheet" />
-<link href=" https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" rel="stylesheet" />
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <style>
     h2 {
@@ -17,15 +19,16 @@
         -webkit-text-fill-color: transparent;
     }
 </style>
-<div class="container">
+
+<div class="container mb-3">
     <div class="py-5 text-center">
-        <h2>Checkout form</h2>
+        <h2>Checkout</h2>
     </div>
     <div class="row g-5">
-        <div class="col-md-5 col-lg-4 order-md-last">
+        <div class="col-md-6 col-lg-4 order-md-last">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text">Your Order</span>
-                <span class="badge bg-primary rounded-pill">3</span>
+                <span class="badge bg-black rounded-pill">@_iCart.CountCart()</span>
             </h4>
             <ul class="list-group mb-3">
                 <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -36,121 +39,60 @@
                         <h4 class="my-0">Total</h4>
                     </div>
                 </li>
-                @foreach (var item in @_IGetAllCarts.GetAllCarts())
+                @foreach (var item in @_iCart.GetAllCarts())
                 {
-                    total += (double)@item.Price;
+                    total += (((double)item.Price) * item.Quantity);
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
-                            <span class="text-muted my-0">@item.ProductName</span>
+                            <span class="text-muted my-0">@item.Quantity X @item.ProductName</span>
                         </div>
                         <span class="text-muted">$@item.Price</span>
                     </li>
                 }
-                 <li class="list-group-item d-flex justify-content-between">
-                        <div>
-                            <h4 class="my-0">Total</h4>
-                        </div>
-                        <div>
-                            <h4 class="my-0">$@total</h4>
-                        </div>
-                    </li>
-
+                <li class="list-group-item d-flex justify-content-between">
+                    <div>
+                        <h4 class="my-0">Total</h4>
+                    </div>
+                    <div>
+                        <h4 class="my-0">$@total.ToString("#,##0.00")</h4>
+                    </div>
+                </li>
             </ul>
-
         </div>
-        <div class="col-md-7 col-lg-8">
-            <h4 cl ass="mb-3">Billing address</h4>
-            <form method="post" asp-action="SaveOrder" class="checkout-form">
+        <div class="col-md-6 col-lg-8">
+            <h4 class="mb-3">Billing address</h4>
+            <form method="post" asp-action="SaveOrder" asp-controller="Cart" class="checkout-form">
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label for="first" class="form-label">First Name</label>
-                        <input name="first" type="text" class="form-control" required>
+                        <input name="first" type="text" class="form-control">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="last" class="form-label">Last Name</label>
-                        <input name="last" type="text" class="form-control" required>
+                        <input name="last" type="text" class="form-control">
                     </div>
 
                     <div class="col-12">
                         <label for="street" class="form-label">Street Address</label>
-                        <input name="street" type="text" class="form-control" required>
+                        <input name="street" type="text" class="form-control">
                     </div>
 
                     <div class="col-12">
                         <label for="town" class="form-label">Town / City</label>
-                        <input name="town" type="text" class="form-control" required>
+                        <input name="town" type="text" class="form-control">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="email" class="form-label">Email Address</label>
-                        <input name="email" type="Email" class="form-control" required>
+                        <input name="email" type="email" class="form-control" >
                     </div>
 
                     <div class="col-sm-6">
                         <label for="phone" class="form-label">Phone</label>
-                        <input name="phone" type="text" class="form-control" required>
-
+                        <input name="phone" type="text" class="form-control" >
                     </div>
                 </div>
-
-                @*<hr class="my-4">*@
-
-                @*<h4 class="mb-3">Payment</h4>
-
-                <div class="my-3">
-                <div class="form-check">
-                <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
-                <label class="form-check-label" for="credit">Credit card</label>
-                </div>
-                <div class="form-check">
-                <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
-                <label class="form-check-label" for="debit">Debit card</label>
-                </div>
-                <div class="form-check">
-                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-                <label class="form-check-label" for="paypal">Paytm</label>
-                </div>
-                <div class="form-check">
-                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-                <label class="form-check-label" for="paypal">Phonepe</label>
-                </div>
-                </div>
-
-                <div class="row gy-3">
-                <div class="col-md-6">
-                <label for="cc-name" class="form-label">Name on card</label>
-                <input type="text" class="form-control" id="cc-name" placeholder="" required>
-                <small class="text-muted">Full name as displayed on card</small>
-                <div class="invalid-feedback">
-                Name on card is required
-                </div>
-                </div>
-
-                <div class="col-md-6">
-                <label for="cc-number" class="form-label">Credit card number</label>
-                <input type="text" class="form-control" id="cc-number" placeholder="" required>
-                <div class="invalid-feedback">
-                Credit card number is required
-                </div>
-                </div>
-
-                <div class="col-md-3">
-                <label for="cc-expiration" class="form-label">Expiration</label>
-                <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
-                <div class="invalid-feedback">
-                Expiration date required
-                </div>
-                </div>
-
-                <div class="col-md-3">
-                <label for="cc-cvv" class="form-label">CVV</label>
-                <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
-                <div class="invalid-feedback">
-                Security code required
-                </div>
-                </div>
-                </div>*@
 
                 <hr class="my-4">
 
@@ -159,6 +101,4 @@
         </div>
     </div>
 </div>
-
-
 

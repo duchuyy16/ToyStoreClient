@@ -11,59 +11,28 @@ namespace ToyStoreClient.Controllers
 {
     public class AuthenticateController : Controller
     {
-        public class TokenModel
-        {
-            public string? Token { get; set; }
-            public DateTime Expiration { get; set; }
-        }
-
         public IActionResult Login()
         {
-            return RedirectToAction("Index", "Home");
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user =  Utilities.SendDataRequest<LoginModel>(ConstantValues.Authenticate.Login, model);
 
-            if (user != null)
-            {
-                // Xử lý logic khi xác thực thành công
-                // Ví dụ: Lưu thông tin người dùng vào session hoặc gửi cookie xác thực
+            var token = Utilities.SendDataRequest<TokenModel>(ConstantValues.Authenticate.Login, model);
 
-                // Lưu thông tin người dùng vào session
-                HttpContext.Session.SetString("UserName", user.Username!);
-
-                // Gửi cookie xác thực
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Username!)
-                };
-
-                var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties
-                {
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30), 
-                    IsPersistent = true, 
-                    AllowRefresh = true 
-                };
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
-            }
-            else
+            if (string.IsNullOrEmpty(token?.Token))
             {
                 ModelState.AddModelError("", "Đăng nhập không hợp lệ. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.");
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
+
+            HttpContext.Session.Set("Token", token.Token);
 
             return RedirectToAction("Index", "Home");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()
@@ -73,12 +42,16 @@ namespace ToyStoreClient.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //[HttpPost]
-        //[Route("register")]
-        //public async Task<IActionResult> Register([FromBody] RegisterModel model)
-        //{
-        //    return View(model);
-        //}
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            return View(model);
+        }
 
         //[HttpPost]
         //[Route("register-admin")]
