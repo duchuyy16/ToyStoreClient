@@ -17,9 +17,8 @@ namespace ToyStoreClient.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public IActionResult Login(LoginModel model)
         {
-
             var token = Utilities.SendDataRequest<TokenModel>(ConstantValues.Authenticate.Login, model);
 
             if (string.IsNullOrEmpty(token?.Token))
@@ -29,16 +28,18 @@ namespace ToyStoreClient.Controllers
             }
 
             HttpContext.Session.Set("Token", token.Token);
+            HttpContext.Session.Set("UserInfo", token.Token.ConvertJwtToJsonObject());
 
             return RedirectToAction("Index", "Home");
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 
@@ -48,7 +49,7 @@ namespace ToyStoreClient.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public IActionResult Register(RegisterModel model)
         {
             return View(model);
         }

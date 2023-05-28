@@ -7,26 +7,29 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Text;
 
 namespace ToyStoreClient.Helpers
 {
     public class Utilities
     {
-        public static T SendDataRequest<T>(string APIUrl, object? input = null, string token="")
+        public static T SendDataRequest<T>(string APIUrl, object? input = null)
         {
+            var token = AppContext.Current!.Session.Get<string>("Token");
             HttpClient client = new();
             client.BaseAddress = new System.Uri("https://localhost:44350");
             client.DefaultRequestHeaders.Accept.Clear();
 
-            if (!string.IsNullOrEmpty(token))
+            if (token != null)
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            //client.DefaultRequestHeaders.Add("Bearer ", token);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            
 
-            HttpResponseMessage response = client.PostAsJsonAsync(APIUrl, input).Result;
+            var jsonContent = JsonConvert.SerializeObject(input);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Post, APIUrl) { Content = content }).Result;
             T result = default!;
             if (response.IsSuccessStatusCode)
             {
@@ -39,7 +42,77 @@ namespace ToyStoreClient.Helpers
             }
             else
             {
-                // Xử lý lỗi
+                var statusCode = response.StatusCode;
+                var reasonPhrase = response.ReasonPhrase;
+                var errorContent = response.Content.ReadAsStringAsync().Result;
+            }
+            return result;
+        }
+
+
+
+        static MultipartFormDataContent ConvertObjectToFormData(object data)
+        {
+            var formData = new MultipartFormDataContent();
+
+            var properties = data.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(data);
+
+                if (value is byte[] fileData)
+                {
+                    var fileContent = new ByteArrayContent(fileData);
+                    fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+                    formData.Add(fileContent, property.Name, "file.txt");
+                }
+                else
+                {
+                    var stringValue = value != null ? value.ToString() : string.Empty;
+                    var stringContent = new StringContent(stringValue!, Encoding.UTF8);
+                    formData.Add(stringContent, property.Name);
+                }
+            }
+
+            return formData;
+        }
+
+        public static T FromData<T>(string APIUrl, object? input = null, IFormFile? imageFile = null)
+        {
+            HttpClient client = new();
+            client.BaseAddress = new System.Uri("https://localhost:44350");
+            client.DefaultRequestHeaders.Accept.Clear();
+
+            MultipartFormDataContent formData = ConvertObjectToFormData(input!);
+
+            if (imageFile != null)
+            {
+                byte[] fileBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    imageFile.CopyTo(memoryStream);
+                    fileBytes = memoryStream.ToArray();
+                }
+
+                ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
+                formData.Add(fileContent, "imageFile", imageFile.FileName);
+            }
+
+            HttpResponseMessage response = client.PostAsync(APIUrl, formData).Result;
+
+            T result = default!;
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonString = response.Content.ReadAsStringAsync().Result;
+                var returnData = JsonConvert.DeserializeObject<T>(jsonString);
+                if (returnData != null)
+                {
+                    return returnData;
+                }
+            }
+            else
+            {
                 var statusCode = response.StatusCode;
                 var reasonPhrase = response.ReasonPhrase;
                 var content = response.Content.ReadAsStringAsync().Result;
@@ -47,30 +120,6 @@ namespace ToyStoreClient.Helpers
             return result;
         }
 
-        //public static T SendDataRequest<T>(string apiUrl, object? input = null, string token = null!, string token = "")
-        //{
-        //    HttpClient client = new HttpClient();
-        //    client.BaseAddress = new Uri("https://localhost:44322/");
-        //    client.DefaultRequestHeaders.Accept.Clear();
-
-        //    if (!string.IsNullOrEmpty(token))
-        //    {
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        //    }
-
-        //client.DefaultRequestHeaders.Add("Bearer ", token);
-        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        //    HttpResponseMessage response = client.PostAsJsonAsync(apiUrl, input).Result;
-        //    T result = default(T)!;
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        result = response.Content.ReadFromJsonAsync<T>().Result!;
-        //    }
-
-        //    return result;
-        //}
 
 
         //public static DataTable GetTable<TEntity>(List<TEntity> table, string name) where TEntity : class

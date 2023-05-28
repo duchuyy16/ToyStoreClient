@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using ToyStoreClient.ApiServices;
+﻿using ToyStoreClient.ApiServices;
 using ToyStoreClient.Services;
 using ToyStoreClient.Services.Interfaces;
 
@@ -19,9 +18,9 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor();
 
+
 //Đếm sp trong giỏ hàng
 builder.Services.AddScoped<ICart, Cart>();
-
 builder.Services.AddScoped<Client>(s => new Client("https://localhost:44350"));
 
 var app = builder.Build();
@@ -32,6 +31,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+ToyStoreClient.Helpers.AppContext.Configure((IHttpContextAccessor)app.Services.GetService(typeof(IHttpContextAccessor))!);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

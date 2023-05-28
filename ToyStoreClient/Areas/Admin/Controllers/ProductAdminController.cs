@@ -126,12 +126,13 @@ namespace ToyStoreClient.Areas.Admin.Controllers
         // POST: Admin/ProductAdmin/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("ProductId,ProductName,Price,ModelYear,Discount,Description,Image,CategoryId")] ProductModel productModel)
+        public IActionResult Create([Bind("ProductId,ProductName,Price,ModelYear,Discount,Description,Image,CategoryId")] ProductModel productModel/*,IFormFile imageFile*/)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    //Upload(productModel, imageFile);
                     Utilities.SendDataRequest<ProductModel>(ConstantValues.Product.AddProduct, productModel);
                     return RedirectToAction(nameof(Index));
                 }
@@ -145,32 +146,6 @@ namespace ToyStoreClient.Areas.Admin.Controllers
         }
 
         // GET: Admin/ProductAdmin/Edit/5
-        public IActionResult Edit(int? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var url = string.Format(ConstantValues.Product.FindProductById, id);
-                var product = Utilities.SendDataRequest<ProductModel>(url);
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-                ViewData["CategoryId"] = new SelectList(Utilities.SendDataRequest<List<CategoryModel>>(ConstantValues.Category.GetAllCategories), product.CategoryId);
-                return View(product);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-
-        }
-
         public IActionResult Details(int? id)
         {
             try
@@ -196,10 +171,46 @@ namespace ToyStoreClient.Areas.Admin.Controllers
 
         }
 
+        public IActionResult Edit(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var url = string.Format(ConstantValues.Product.FindProductById, id);
+                var product = Utilities.SendDataRequest<ProductModel>(url);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                ViewData["CategoryId"] = new SelectList(Utilities.SendDataRequest<List<CategoryModel>>(ConstantValues.Category.GetAllCategories), "CategoryId", "CategoryName", product.CategoryId);
+                return View(product);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+        }
+        //public string GetDataPath(string file) => $"\\{file}";
+        //public void Upload(ProductModel productModel, IFormFile file)
+        //{
+        //    if (file != null)
+        //    {
+        //        var path = GetDataPath(file.FileName);
+        //        using var stream = new FileStream(path, FileMode.Create);
+        //        file.CopyTo(stream);
+        //        productModel.Image = file.FileName;
+        //    }
+        //}
         //POST: Admin/ProductModel/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("ProductId,ProductName,Price,ModelYear,Discount,Description,Image,CategoryId")] ProductModel productModel)
+        public IActionResult Edit(int id, [Bind("ProductId,ProductName,Price,ModelYear,Discount,Description,Image,CategoryId")] ProductModel productModel,IFormFile imageFile)
         {
             try
             {
@@ -212,7 +223,13 @@ namespace ToyStoreClient.Areas.Admin.Controllers
                 {
                     try
                     {
-                        Utilities.SendDataRequest<bool>(ConstantValues.Product.UpdateProduct, productModel);
+                        //productModel.Category = new CategoryModel
+                        //{
+                        //    CategoryId = 1,
+                        //    CategoryName = "test"
+                        //};
+                        //Upload(productModel, imageFile);
+                        Utilities.FromData<bool>(ConstantValues.Product.UpdateProduct, productModel,imageFile);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -227,7 +244,8 @@ namespace ToyStoreClient.Areas.Admin.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
-                ViewData["CategoryId"] = new SelectList(Utilities.SendDataRequest<List<CategoryModel>>(ConstantValues.Category.GetAllCategories), productModel.CategoryId);
+                
+                ViewData["CategoryId"] = new SelectList(Utilities.SendDataRequest<List<CategoryModel>>(ConstantValues.Category.GetAllCategories), "CategoryId", "CategoryName", productModel.CategoryId);
                 return View(productModel);
             }
             catch (Exception)

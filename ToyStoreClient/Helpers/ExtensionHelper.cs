@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using ToyStoreClient.Models;
 
 namespace ToyStoreClient.Helpers
 {
@@ -13,6 +16,18 @@ namespace ToyStoreClient.Helpers
         {
             var value = session.GetString(key) ?? default;
             return value != null ? System.Text.Json.JsonSerializer.Deserialize<T>(value) : default;
+        }
+
+        public static string ConvertJwtToJsonObject(this string jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(jwt);
+            var userModel = new CurrentUserModel()
+            {
+                Name = jwtSecurityToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value!
+            };
+
+            return System.Text.Json.JsonSerializer.Serialize(userModel);
         }
     }
 }
