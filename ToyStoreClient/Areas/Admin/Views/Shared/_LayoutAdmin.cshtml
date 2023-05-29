@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ToyStoreClient.Helpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -196,12 +197,24 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            @{
+                                var jwtToken = ToyStoreClient.Helpers.AppContext.Current!.Session.Get<string>("Token");
+                                var userName = jwtToken!.GetUserNameFromJwt();
+                            }
+                            @if (!string.IsNullOrEmpty(userName))
+                            {
+
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                     src="img/undraw_profile.svg">
-                            </a>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome, <strong>@userName!</strong></span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Authenticate" asp-action="Logout">Logout</a>
+                                    </li>
+                                </ul>
+
+                            }
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
@@ -231,7 +244,7 @@
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                        @RenderBody()
+                    @RenderBody()
                 </div>
 
             </div>
@@ -295,7 +308,7 @@
     <!-- Page level custom scripts -->
     <script src="~/admin/js/demo/chart-area-demo.js"></script>
     <script src="~/admin/js/demo/chart-pie-demo.js"></script>
-    
+
 </body>
 
 </html>

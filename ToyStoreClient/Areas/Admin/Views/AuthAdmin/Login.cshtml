@@ -1,18 +1,17 @@
-﻿@{
+﻿@model ToyStoreClient.Models.LoginModel
+@{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
-
-
 <section class="vh-100">
-    <div class="container-fluid h-custom">
+    <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-9 col-lg-6 col-xl-5">
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid"
                      alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form method="post" action="/Authenticate/Login">
+                <form method="post" action="Admin/AuthAdmin/Login">
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <p class="lead fw-normal mb-0 me-3">Sign in with</p>
                         <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -68,6 +67,7 @@
         </div>
     </div>
 </section>
+
 @section HiddenPassword{
     <script type="text/javascript">
     $(document).ready(function() {
@@ -84,3 +84,4 @@
     });
 </script>
 }
+

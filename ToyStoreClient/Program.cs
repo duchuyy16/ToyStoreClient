@@ -1,4 +1,6 @@
-﻿using ToyStoreClient.ApiServices;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ToyStoreClient.ApiServices;
 using ToyStoreClient.Services;
 using ToyStoreClient.Services.Interfaces;
 
@@ -9,6 +11,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+});
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -38,8 +47,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-//app.UseAuthorization();
-//app.UseAuthentication();
+app.UseAuthorization();
+app.UseAuthentication();
 app.UseSession();
 
 app.MapRazorPages();
@@ -47,7 +56,7 @@ app.MapRazorPages();
 app.MapAreaControllerRoute(
     name: "MyAreaAdmin",
     areaName: "Admin",
-    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+    pattern: "Admin/{controller=AuthAdmin}/{action=Login}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

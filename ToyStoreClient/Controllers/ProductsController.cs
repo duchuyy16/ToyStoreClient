@@ -18,9 +18,8 @@ namespace ToyStoreClient.Controllers
             ViewBag.Name = keyword;
             if (!string.IsNullOrEmpty(keyword))
             {
-                //var accessToken = HttpContext.Session.Get("Token");
                 var url = string.Format(ConstantValues.Product.SearchByProductName, keyword);
-                var products = Utilities.SendDataRequest<List<ProductModel>>(url/*, null, accessToken!*/);
+                var products = Utilities.SendDataRequest<List<ProductModel>>(url);
                 return View(products);
             }
             else

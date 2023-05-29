@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Security.Claims;
 using ToyStoreAPI.Models;
 using ToyStoreClient.Helpers;
 using ToyStoreClient.Models;
 
 namespace ToyStoreClient.Controllers
 {
+    
     public class AuthenticateController : Controller
     {
         public IActionResult Login()
@@ -36,10 +36,11 @@ namespace ToyStoreClient.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Clear();
+            HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
@@ -47,18 +48,52 @@ namespace ToyStoreClient.Controllers
         {
             return View();
         }
-
+        
         [HttpPost]
         public IActionResult Register(RegisterModel model)
         {
+            if (ModelState.IsValid)
+            {
+                var response = Utilities.SendDataRequest<Response>(ConstantValues.Authenticate.Register, model);
+
+                if (response.Status == "Success")
+                {
+                    TempData["StateRegister"] = "Success";
+                    TempData["MessageRegister"] = "User created successfully!";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, response.Message!);
+                }                    
+            }
             return View(model);
         }
 
-        //[HttpPost]
-        //[Route("register-admin")]
-        //public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        //{
-        //    return View(model);
-        //}
+        public IActionResult RegisterAdmin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RegisterAdmin(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = Utilities.SendDataRequest<Response>(ConstantValues.Authenticate.Register, model);
+
+                if (response.Status == "Success")
+                {
+                    TempData["StateRegister"] = "Success";
+                    TempData["MessageRegister"] = "User created successfully!";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, response.Message!);
+                }
+            }
+            return View(model);
+        }
     }
 }
