@@ -21,28 +21,26 @@ namespace ToyStoreClient.Controllers
         {
             var token = Utilities.SendDataRequest<TokenModel>(ConstantValues.Authenticate.Login, model);
 
-            if (string.IsNullOrEmpty(token?.Token))
+            if (string.IsNullOrEmpty(token.Token))
             {
                 ModelState.AddModelError("", "Đăng nhập không hợp lệ. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.");
                 return RedirectToAction("Index", "Home");
             }
 
             HttpContext.Session.Set("Token", token.Token);
-            HttpContext.Session.Set("UserInfo", token.Token.ConvertJwtToJsonObject());
 
             return RedirectToAction("Index", "Home");
         }
 
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
-            HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
-            HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            HttpContext.SignOutAsync(); 
+
+            return RedirectToAction("Index", "Home"); 
         }
+
 
         public IActionResult Register()
         {

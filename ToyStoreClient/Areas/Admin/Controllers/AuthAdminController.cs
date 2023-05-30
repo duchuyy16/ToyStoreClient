@@ -14,22 +14,22 @@ namespace ToyStoreClient.Areas.Admin.Controllers
             return View();
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
+        
         [HttpPost]
         public IActionResult Login(LoginModel model)
         {
             var token = Utilities.SendDataRequest<TokenModel>(ConstantValues.Authenticate.Login, model);
 
-            if (string.IsNullOrEmpty(token?.Token))
+            if (string.IsNullOrEmpty(token.Token))
             {
                 ModelState.AddModelError("", "Đăng nhập không hợp lệ. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.");
                 return RedirectToAction("Index", "Home");
             }
 
             HttpContext.Session.Set("Token", token.Token);
-            HttpContext.Session.Set("UserInfo", token.Token.ConvertJwtToJsonObject());
 
-            return Redirect("/Admin/Home/Index");
+            return RedirectToAction("Index", "Home", new { area = "Admin" });
+
         }
     }
 }

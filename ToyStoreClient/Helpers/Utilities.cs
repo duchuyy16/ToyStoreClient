@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using ToyStoreClient.Models;
 
 namespace ToyStoreClient.Helpers
 {
@@ -9,15 +10,16 @@ namespace ToyStoreClient.Helpers
     {
         public static T SendDataRequest<T>(string APIUrl, object? input = null)
         {
-            var token = AppContext.Current!.Session.Get<string>("Token");
+
+
             HttpClient client = new();
             client.BaseAddress = new System.Uri("https://localhost:44350");
             client.DefaultRequestHeaders.Accept.Clear();
-
-            if (token != null)
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
+            var token = AppContext.Current!.Session.Get<TokenModel>("Token");
+            //if (token != null)
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+            //}
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var jsonContent = JsonConvert.SerializeObject(input);

@@ -15,9 +15,8 @@ namespace ToyStoreClient.Areas.Admin.Controllers
             var orders = Utilities.SendDataRequest<List<OrderModel>>(ConstantValues.Order.GetAllOrders);
             var pagedList = orders.ToPagedList(pageNo, 5);
             return View(pagedList);
-
-
         }
+
         public IActionResult Details(int? id)
         {
             if (id == null)
