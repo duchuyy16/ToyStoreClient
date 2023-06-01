@@ -71,7 +71,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-ToyStoreClient.Helpers.AppContext.Configure((IHttpContextAccessor)app.Services.GetService(typeof(IHttpContextAccessor))!);
+ToyStoreClient.Helpers.AppContext.Configure((IHttpContextAccessor)app.Services.GetRequiredService(typeof(IHttpContextAccessor))!);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -13,7 +13,9 @@
             public const string UpdateProduct = "api/Products/UpdateProduct";
             public const string DeleteProduct = "api/Products/DeleteProduct";
             public const string FindProductById = "api/Products/FindProductById/{0}";
-            public const string ExistsById = "api/Products/ExistsById/{0}";       
+            public const string ExistsById = "api/Products/ExistsById/{0}";
+            public const string CountProducts = "api/Products/CountProducts";
+            public const string ProductStatistics = "api/Statistics/ProductStatistics";
         }
         public class Category
         {
@@ -23,13 +25,13 @@
             public const string UpdateCategory = "api/Categories/UpdateCategory";
             public const string DeleteCategory = "api/Categories/DeleteCategory";
             public const string FindCategoryById = "api/Categories/FindCategoryById/{0}";
-            public const string ExistsById = "api/Categories/ExistsById/{0}"; 
-            //public const string ThongKeSanPhamTheoTheLoai = "api/ThongKe/ThongKeSanPhamTheoTheLoai";
+            public const string ExistsById = "api/Categories/ExistsById/{0}";
+            public const string CountCategories = "api/Categories/CountCategories";
         }
-        //public class User
-        //{
-        //    public const string GetAllUsers = "api/Users/GetAllUsers";
-        //}
+        public class User
+        {
+            public const string CountUsers = "api/Users/CountUsers";
+        }
         public class Status
         {
             public const string GetAllStatuses = "api/Statuses/GetAllStatuses";
@@ -43,6 +45,7 @@
             public const string DeleteOrder = "api/Orders/DeleteOrder";
             public const string FindOrderById = "api/Orders/FindOrderById/{0}";
             public const string ExistsById = "api/Orders/ExistsById/{0}";
+            public const string CountOrders = "api/Orders/CountOrders";
         }
         public class OrderDetail
         {

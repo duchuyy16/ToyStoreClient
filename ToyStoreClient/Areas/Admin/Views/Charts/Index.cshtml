@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(LoadData);
+        function LoadData() {
+            $.ajax({
+                url: '/Admin/Charts/Statistic',
+                dataType: "json",
+                type: "GET",
+                error: function(xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    toastr.error(err.message);
+                },
+                success: function(data) {
+                    DrawChart(data);
+                    return false;
+                }
+            });
+            return false;
+        }
+
+        function DrawChart(data) {
+            var dataArray = [
+                ['CategoryName', 'ProductQuantity']
+            ];
+            $.each(data, function(i, item) {
+                dataArray.push([item["categoryName"], item["productQuantity"]]);
+            });
+
+            var myData =new google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                title: 'Number of products by category',
+                'width': 400,
+                'height': 200,
+                'legend': 'none'
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('myChart'));
+            chart.draw(myData, options);
+            return false;
+        }
+    </script>
+</div>
+<div class="container-fluid lead">
+    <div id="myChart"style="width:400px; height:200px;" ></div>
+</div>
+
+

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Data;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
@@ -10,12 +11,15 @@ namespace ToyStoreClient.Helpers
     {
         public static T SendDataRequest<T>(string APIUrl, object? input = null)
         {
-
-
             HttpClient client = new();
             client.BaseAddress = new System.Uri("https://localhost:44350");
             client.DefaultRequestHeaders.Accept.Clear();
-            var token = AppContext.Current!.Session.Get<TokenModel>("Token");
+            var token = AppContext.Current!.Session.GetString("Token");
+            if (token != null)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            //var token = AppContext.Current!.Session.Get<TokenModel>("Token");
             //if (token != null)
             //{
             //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
@@ -44,8 +48,6 @@ namespace ToyStoreClient.Helpers
             }
             return result;
         }
-
-
 
         static MultipartFormDataContent ConvertObjectToFormData(object data)
         {
@@ -116,61 +118,59 @@ namespace ToyStoreClient.Helpers
             return result;
         }
 
+        public static DataTable GetTable<TEntity>(List<TEntity> table, string name) where TEntity : class
+        {
+            var offset = 78;
+            DataTable result = new DataTable(name);
+            PropertyInfo[] infos = typeof(TEntity).GetProperties();
+            foreach (PropertyInfo info in infos)
+            {
+                if (info.PropertyType.IsGenericType
+                && info.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    result.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType)!));
+                }
+                else
+                {
+                    result.Columns.Add(new DataColumn(info.Name, info.PropertyType));
+                }
+            }
+            foreach (var el in table)
+            {
+                DataRow row = result.NewRow();
+                foreach (PropertyInfo info in infos)
+                {
+                    if (info.PropertyType.IsGenericType &&
+                        info.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        object t = info.GetValue(el)!;
+                        if (t == null)
+                        {
+                            t = Activator.CreateInstance(Nullable.GetUnderlyingType(info.PropertyType)!)!;
+                        }
 
+                        row[info.Name] = t;
+                    }
+                    else
+                    {
+                        if (info.PropertyType == typeof(byte[]))
+                        {
+                            //Fix for Image issue.
+                            var imageData = (byte[])info.GetValue(el)!;
+                            var bytes = new byte[imageData.Length - offset];
+                            Array.Copy(imageData, offset, bytes, 0, bytes.Length);
+                            row[info.Name] = bytes;
+                        }
+                        else
+                        {
+                            row[info.Name] = info.GetValue(el);
+                        }
+                    }
+                }
+                result.Rows.Add(row);
+            }
 
-        //public static DataTable GetTable<TEntity>(List<TEntity> table, string name) where TEntity : class
-        //{
-        //    var offset = 78;
-        //    DataTable result = new DataTable(name);
-        //    PropertyInfo[] infos = typeof(TEntity).GetProperties();
-        //    foreach (PropertyInfo info in infos)
-        //    {
-        //        if (info.PropertyType.IsGenericType
-        //        && info.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-        //        {
-        //            result.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType)));
-        //        }
-        //        else
-        //        {
-        //            result.Columns.Add(new DataColumn(info.Name, info.PropertyType));
-        //        }
-        //    }
-        //    foreach (var el in table)
-        //    {
-        //        DataRow row = result.NewRow();
-        //        foreach (PropertyInfo info in infos)
-        //        {
-        //            if (info.PropertyType.IsGenericType &&
-        //                info.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-        //            {
-        //                object t = info.GetValue(el);
-        //                if (t == null)
-        //                {
-        //                    t = Activator.CreateInstance(Nullable.GetUnderlyingType(info.PropertyType));
-        //                }
-
-        //                row[info.Name] = t;
-        //            }
-        //            else
-        //            {
-        //                if (info.PropertyType == typeof(byte[]))
-        //                {
-        //                    //Fix for Image issue.
-        //                    var imageData = (byte[])info.GetValue(el);
-        //                    var bytes = new byte[imageData.Length - offset];
-        //                    Array.Copy(imageData, offset, bytes, 0, bytes.Length);
-        //                    row[info.Name] = bytes;
-        //                }
-        //                else
-        //                {
-        //                    row[info.Name] = info.GetValue(el);
-        //                }
-        //            }
-        //        }
-        //        result.Rows.Add(row);
-        //    }
-
-        //    return result;
-        //}
+            return result;
+        }
     }
 }

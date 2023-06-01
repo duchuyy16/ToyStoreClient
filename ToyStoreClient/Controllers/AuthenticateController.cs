@@ -8,7 +8,6 @@ using ToyStoreClient.Models;
 
 namespace ToyStoreClient.Controllers
 {
-    
     public class AuthenticateController : Controller
     {
         public IActionResult Login()
@@ -29,7 +28,7 @@ namespace ToyStoreClient.Controllers
 
             HttpContext.Session.Set("Token", token.Token);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home"); 
         }
 
 
