@@ -32,28 +32,6 @@
     </style>
 </head>
 <body>
-    @if (TempData["Message"] != null && (string)TempData["Message"]! != "No")
-    {
-        <script type="text/javascript">
-            window.onload = function() {
-                Swal.fire(
-                    '@TempData["State"]',
-                    '@TempData["Message"]',
-                    '@TempData["State"]')
-            };
-        </script>
-    }
-    @if (TempData["MessageRegister"] != null && (string)TempData["MessageRegister"]! != "No")
-    {
-        <script type="text/javascript">
-            window.onload = function() {
-                Swal.fire(
-                    '@TempData["StateRegister"]',
-                    '@TempData["MessageRegister"]',
-                    '@TempData["StateRegister"]')
-            };
-        </script>
-    }
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
@@ -254,6 +232,31 @@
         <!-- Copyright -->
     </footer>
     <!-- Footer -->
+
+    @if (TempData["Message"] != null && (string)TempData["Message"]! != "No")
+    {
+        <script type="text/javascript">
+            window.onload = function() {
+                Swal.fire(
+                    '@TempData["State"]',
+                    '@TempData["Message"]',
+                    '@TempData["State"]')
+            };
+        </script>
+    }
+
+    @if (TempData["MessageRegister"] != null && (string)TempData["MessageRegister"]! != "No")
+    {
+        <script type="text/javascript">
+            window.onload = function() {
+                Swal.fire(
+                    '@TempData["StateRegister"]',
+                    '@TempData["MessageRegister"]',
+                    '@TempData["StateRegister"]')
+            };
+        </script>
+    }
+
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->

@@ -10,6 +10,7 @@ namespace ToyStoreClient.Controllers
 {
     public class AuthenticateController : Controller
     {
+
         public IActionResult Login()
         {
             return View();
@@ -20,24 +21,24 @@ namespace ToyStoreClient.Controllers
         {
             var token = Utilities.SendDataRequest<TokenModel>(ConstantValues.Authenticate.Login, model);
 
-            if (string.IsNullOrEmpty(token.Token))
+            if (token == null || string.IsNullOrEmpty(token.Token))
             {
-                ModelState.AddModelError("", "Đăng nhập không hợp lệ. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.");
-                return RedirectToAction("Index", "Home");
+                TempData["Error"] = $"<h5>Invalid login</h5>" +
+                            "Please double check your username and password.";
+
+                return View(model);
             }
 
             HttpContext.Session.Set("Token", token.Token);
-
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home");
         }
-
 
 
         public IActionResult Logout()
         {
-            HttpContext.SignOutAsync(); 
-
-            return RedirectToAction("Index", "Home"); 
+            Utilities.SendDataRequest<Response>(ConstantValues.Authenticate.Logout);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
 
 
@@ -45,7 +46,7 @@ namespace ToyStoreClient.Controllers
         {
             return View();
         }
-        
+
         [HttpPost]
         public IActionResult Register(RegisterModel model)
         {
@@ -62,7 +63,7 @@ namespace ToyStoreClient.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, response.Message!);
-                }                    
+                }
             }
             return View(model);
         }

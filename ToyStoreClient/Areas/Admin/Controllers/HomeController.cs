@@ -10,6 +10,7 @@ namespace ToyStoreClient.Areas.Admin.Controllers
     //[Authorize(Roles = UserRoles.Admin)]
     public class HomeController : Controller
     {
+  
         public IActionResult Index()
         {
             var productNumber=Utilities.SendDataRequest<int>(ConstantValues.Product.CountProducts);
@@ -23,6 +24,9 @@ namespace ToyStoreClient.Areas.Admin.Controllers
 
             var orderNumber = Utilities.SendDataRequest<int>(ConstantValues.Order.CountOrders);
             ViewBag.OrderNumber = orderNumber;
+
+            //var productStatistics = Utilities.SendDataRequest<List<StatisticModel>>(ConstantValues.Product.ProductStatistics);
+            //ViewBag.ProductStatistics = productStatistics;
 
             return View();
         }

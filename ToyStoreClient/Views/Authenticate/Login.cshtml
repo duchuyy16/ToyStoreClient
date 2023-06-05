@@ -3,7 +3,6 @@
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-
 <section class="vh-100">
     <div class="container-fluid h-custom">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -27,6 +26,13 @@
                     <div class="divider d-flex align-items-center my-4">
                         <p class="text-center fw-bold mx-3 mb-0">Or</p>
                     </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger" style="text-align:center">
+                            @Html.Raw(TempData["Error"])
+                        </div>
+                    }
 
                     <!-- Email input -->
                     <div class="form-outline mb-4">
@@ -70,17 +76,18 @@
 </section>
 @section HiddenPassword{
     <script type="text/javascript">
-    $(document).ready(function() {
-        $("#open").click(function() {
-            $("#open").hide();
-            $("#closed").show();
-            $("#pw").attr("type", "text");
+        $(document).ready(function() {
+            $("#open").click(function() {
+                $("#open").hide();
+                $("#closed").show();
+                $("#pw").attr("type", "text");
+            });
+            $("#closed").click(function() {
+                $("#closed").hide();
+                $("#open").show();
+                $("#pw").attr("type", "password");
+            });
         });
-        $("#closed").click(function() {
-            $("#closed").hide();
-            $("#open").show();
-            $("#pw").attr("type", "password");
-        });
-    });
-</script>
+    </script>
 }
+

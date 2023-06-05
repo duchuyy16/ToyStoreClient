@@ -28,14 +28,20 @@
             public const string ExistsById = "api/Categories/ExistsById/{0}";
             public const string CountCategories = "api/Categories/CountCategories";
         }
+
         public class User
         {
             public const string CountUsers = "api/Users/CountUsers";
+            public const string GetUserById = "api/Users/GetUserById/{0}";
+            public const string GetAllUsers = "api/Users/GetAllUsers";
+            //public const string CountUsers = "api/Users/CountUsers";
         }
+
         public class Status
         {
             public const string GetAllStatuses = "api/Statuses/GetAllStatuses";
         }
+
         public class Order
         {
             public const string GetAllOrders = "api/Orders/GetAllOrders";
@@ -47,6 +53,7 @@
             public const string ExistsById = "api/Orders/ExistsById/{0}";
             public const string CountOrders = "api/Orders/CountOrders";
         }
+
         public class OrderDetail
         {
             public const string GetAllOrderDetails = "api/OrderDetails/GetAllOrderDetails";
@@ -57,12 +64,15 @@
             public const string ExistsById = "api/OrderDetails/ExistsById/{0}";
             public const string FindOrderDetailById = "api/OrderDetails/FindOrderDetailById/{0}";
         }
+
         public class Authenticate
         {
             public const string Login = "api/Authenticate/login";
             public const string Register = "api/Authenticate/register";
             public const string RegisterAdmin = "api/Authenticate/register-admin";
+            public const string Logout = "api/Authenticate/logout";
         }
+
         public class Contact
         {
             public const string GetAllContacts = "api/Contacts/GetAllContacts";

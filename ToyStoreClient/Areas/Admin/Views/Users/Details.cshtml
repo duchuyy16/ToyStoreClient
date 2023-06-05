@@ -1,0 +1,30 @@
+﻿@model ToyStoreClient.Models.AspNetUserModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<h1 class="text-center">Details</h1>
+<div class="container">
+    <h4 class="text-center">AspNetUserModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">User Id:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Id)</dd>
+
+        <dt class="col-sm-3">UserName:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.UserName)</dd>
+
+        <dt class="col-sm-3">PasswordHash:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PasswordHash)</dd>
+
+        <dt class="col-sm-3">Email:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+    </dl>
+</div>
+<div class="text-center mt-3">
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }, new { @class = "btn btn-primary" }) |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div> 
+
+17tr5 + 700 + 20tr +20tr200 +5tr +16tr8 +4tr +5tr +3tr5
