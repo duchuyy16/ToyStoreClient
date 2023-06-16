@@ -34,7 +34,6 @@
             public const string CountUsers = "api/Users/CountUsers";
             public const string GetUserById = "api/Users/GetUserById/{0}";
             public const string GetAllUsers = "api/Users/GetAllUsers";
-            //public const string CountUsers = "api/Users/CountUsers";
         }
 
         public class Status
@@ -71,6 +70,8 @@
             public const string Register = "api/Authenticate/register";
             public const string RegisterAdmin = "api/Authenticate/register-admin";
             public const string Logout = "api/Authenticate/logout";
+            public const string ResetPasswordToken = "api/Authenticate/reset-password-token/{0}";
+            public const string ResetPassword = "api/Authenticate/reset-password";
         }
 
         public class Contact

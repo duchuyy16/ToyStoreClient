@@ -10,7 +10,6 @@ namespace ToyStoreClient.Controllers
 {
     public class AuthenticateController : Controller
     {
-
         public IActionResult Login()
         {
             return View();
@@ -92,6 +91,39 @@ namespace ToyStoreClient.Controllers
                 }
             }
             return View(model);
+        }
+
+        public IActionResult ResetPasswordToken()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ResetPasswordToken(string email)
+        {
+            //if (string.IsNullOrEmpty(email))
+            //{
+            //    ViewBag.ErrorMessage = "Please enter your email.";
+            //    return View();
+            //}
+
+            var url = string.Format(ConstantValues.Authenticate.ResetPasswordToken, email);
+            var response = Utilities.SendDataRequest<Response>(url);
+
+            return RedirectToAction("Login", "Authenticate");
+        }
+
+        [Route("reset-password")]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ResetPassword(ResetPasswordModel model)
+        {
+            var response = Utilities.SendDataRequest<Response>(ConstantValues.Authenticate.ResetPassword, model);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
