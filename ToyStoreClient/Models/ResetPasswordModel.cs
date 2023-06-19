@@ -9,8 +9,10 @@ namespace ToyStoreClient.Models
         public string? Email { get; set; }
 
         [Required(ErrorMessage = "NewPassword is required")]
+        [DataType(DataType.Password)]
         public string? NewPassword { get; set; }
 
+        [DataType(DataType.Password)]
         [Required(ErrorMessage = "ConfirmNewPassword is required")]
         public string? ConfirmNewPassword { get; set; }
 

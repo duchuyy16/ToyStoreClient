@@ -8,10 +8,10 @@ namespace ToyStoreClient.Controllers
 {
     public class ProductsController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public IActionResult SearchByProductName(string keyword)
         {

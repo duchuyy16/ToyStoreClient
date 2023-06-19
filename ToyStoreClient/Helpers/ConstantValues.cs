@@ -72,6 +72,7 @@
             public const string Logout = "api/Authenticate/logout";
             public const string ResetPasswordToken = "api/Authenticate/reset-password-token/{0}";
             public const string ResetPassword = "api/Authenticate/reset-password";
+            public const string ChangePassword = "api/Authenticate/change-password";
         }
 
         public class Contact
