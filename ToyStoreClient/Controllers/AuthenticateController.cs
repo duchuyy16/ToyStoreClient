@@ -152,7 +152,7 @@ namespace ToyStoreClient.Controllers
                             "Password changed failed!";
                 return View();
             }
-
+            TempData["SuccessMessage"] = "Successfully";
             return RedirectToAction("Index","Home");
         }
     }

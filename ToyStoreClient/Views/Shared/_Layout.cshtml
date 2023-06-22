@@ -280,6 +280,24 @@
 
 
     <div>
+        <div id="myModalSuccess" class="modal fade text-width:30%;" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Information</h2>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div id="MyMondalSuccessAlertBody" class="modal-body alter alert-success">
+                        this is a modal body, our message will appear here.
+                    </div>
+                    <div class="modal-footer">
+                        &nbsp;
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @RenderBody()
     </div>
 
@@ -406,6 +424,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="~/js/scripts.js"></script>
-    @RenderSection("breadcrum", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

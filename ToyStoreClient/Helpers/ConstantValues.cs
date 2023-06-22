@@ -85,5 +85,10 @@
             public const string FindContactById = "api/Contacts/FindContactById/{0}";
             public const string ExistsById = "api/Contacts/ExistsById/{0}";
         }
+
+        public class Home
+        {
+            public const string Count = "api/Home/Count";
+        }
     }
 }
