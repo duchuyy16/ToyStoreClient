@@ -16,6 +16,7 @@
             public const string ExistsById = "api/Products/ExistsById/{0}";
             public const string CountProducts = "api/Products/CountProducts";
             public const string ProductStatistics = "api/Statistics/ProductStatistics";
+            public const string Download = "api/Products/download";
         }
         public class Category
         {

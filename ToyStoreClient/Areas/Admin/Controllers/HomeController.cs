@@ -7,9 +7,10 @@ using ToyStoreClient.Models;
 namespace ToyStoreClient.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = UserRoles.Admin)]
+    
     public class HomeController : Controller
     {
+        [Authorize(Roles = UserRoles.Admin)]
         public IActionResult Index()
         {
             //var productNumber=Utilities.SendDataRequest<Response>(ConstantValues.Product.CountProducts);
