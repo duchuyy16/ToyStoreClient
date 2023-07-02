@@ -9,12 +9,12 @@ namespace ToyStoreClient.Helpers
 {
     public class Utilities
     {
-        public static T SendDataRequest<T>(string APIUrl, object? input = null)
+        public static T SendDataRequest<T>(string APIUrl, object? input = null,string? token = null)
         {
             HttpClient client = new();
             client.BaseAddress = new System.Uri("https://localhost:44350");
             client.DefaultRequestHeaders.Accept.Clear();
-            var token = AppContext.Current!.Session.GetString("Token");
+            //var token = AppContext.Current!.Session.GetString("Token");
             if (token != null)
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
