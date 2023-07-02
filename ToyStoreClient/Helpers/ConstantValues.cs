@@ -16,6 +16,7 @@
             public const string ExistsById = "api/Products/ExistsById/{0}";
             public const string CountProducts = "api/Products/CountProducts";
             public const string ProductStatistics = "api/Statistics/ProductStatistics";
+            public const string Download = "api/Products/download";
         }
         public class Category
         {
@@ -34,7 +35,6 @@
             public const string CountUsers = "api/Users/CountUsers";
             public const string GetUserById = "api/Users/GetUserById/{0}";
             public const string GetAllUsers = "api/Users/GetAllUsers";
-            //public const string CountUsers = "api/Users/CountUsers";
         }
 
         public class Status
@@ -71,6 +71,9 @@
             public const string Register = "api/Authenticate/register";
             public const string RegisterAdmin = "api/Authenticate/register-admin";
             public const string Logout = "api/Authenticate/logout";
+            public const string ResetPasswordToken = "api/Authenticate/reset-password-token/{0}";
+            public const string ResetPassword = "api/Authenticate/reset-password";
+            public const string ChangePassword = "api/Authenticate/change-password";
         }
 
         public class Contact
@@ -82,6 +85,11 @@
             public const string DeleteContact = "api/Contacts/DeleteContact";
             public const string FindContactById = "api/Contacts/FindContactById/{0}";
             public const string ExistsById = "api/Contacts/ExistsById/{0}";
+        }
+
+        public class Home
+        {
+            public const string Count = "api/Home/Count";
         }
     }
 }

@@ -14,16 +14,11 @@ namespace ToyStoreClient.Helpers
             HttpClient client = new();
             client.BaseAddress = new System.Uri("https://localhost:44350");
             client.DefaultRequestHeaders.Accept.Clear();
-            //var token = AppContext.Current!.Session.GetString("Token");
-            if (token != null)
+            string accessToken = AppContext.Current!.Session.GetString("Token")!;
+            if (!string.IsNullOrEmpty(accessToken))
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             }
-            //var token = AppContext.Current!.Session.Get<TokenModel>("Token");
-            //if (token != null)
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
-            //}
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var jsonContent = JsonConvert.SerializeObject(input);

@@ -11,45 +11,51 @@ namespace ToyStoreClient.Areas.Admin.Controllers
     [Area("Admin")]
     public class ProductAdminController : Controller
     {
+        //public IActionResult ExportToExcel()
+        //{
+        //    var productList = Utilities.SendDataRequest<List<ProductModel>>(ConstantValues.Product.GetAllProducts);
+
+        //    using (var package = new ExcelPackage())
+        //    {
+        //        var worksheet = package.Workbook.Worksheets.Add("ListOfProducts");
+        //        // Thêm tiêu đề cho các cột trong bảng
+        //        worksheet.Cells[1, 1].Value = "ID sản phẩm";
+        //        worksheet.Cells[1, 2].Value = "Tên sản phẩm";
+        //        worksheet.Cells[1, 3].Value = "Gía";
+        //        worksheet.Cells[1, 4].Value = "Mẫu năm";
+        //        worksheet.Cells[1, 5].Value = "Giảm giá";
+        //        worksheet.Cells[1, 6].Value = "Mô tả";
+        //        worksheet.Cells[1, 7].Value = "Hình Ảnh";
+        //        worksheet.Cells[1, 8].Value = "Thể Loại";
+        //        // Thêm dữ liệu cho từng sản phẩm
+        //        for (int i = 0; i < productList.Count; i++)
+        //        {
+        //            worksheet.Cells[i + 2, 1].Value = productList[i].ProductId;
+        //            worksheet.Cells[i + 2, 2].Value = productList[i].ProductName;
+        //            worksheet.Cells[i + 2, 3].Value = productList[i].Price;
+        //            worksheet.Cells[i + 2, 4].Value = productList[i].ModelYear;
+        //            worksheet.Cells[i + 2, 5].Value = productList[i].Discount;
+        //            worksheet.Cells[i + 2, 6].Value = productList[i].Description;
+        //            worksheet.Cells[i + 2, 7].Value = productList[i].Image;
+        //            worksheet.Cells[i + 2, 8].Value = productList[i].CategoryId;
+        //        }
+
+        //        // Tự động điều chỉnh cỡ cột để hiển thị đầy đủ dữ liệu
+        //        worksheet.Cells.AutoFitColumns();
+
+        //        // Lưu tệp Excel vào bộ nhớ đệm
+        //        var stream = new MemoryStream();
+        //        package.SaveAs(stream);
+
+        //        // Trả về tệp Excel dưới dạng phản hồi HTTP
+        //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", @"D:\ToyStore\Excel\ListOfProducts.xlsx");
+        //    }
+        //}
+
         public IActionResult ExportToExcel()
         {
-            var productList = Utilities.SendDataRequest<List<ProductModel>>(ConstantValues.Product.GetAllProducts);
-
-            using (var package = new ExcelPackage())
-            {
-                var worksheet = package.Workbook.Worksheets.Add("ListOfProducts");
-                // Thêm tiêu đề cho các cột trong bảng
-                worksheet.Cells[1, 1].Value = "ID sản phẩm";
-                worksheet.Cells[1, 2].Value = "Tên sản phẩm";
-                worksheet.Cells[1, 3].Value = "Gía";
-                worksheet.Cells[1, 4].Value = "Mẫu năm";
-                worksheet.Cells[1, 5].Value = "Giảm giá";
-                worksheet.Cells[1, 6].Value = "Mô tả";
-                worksheet.Cells[1, 7].Value = "Hình Ảnh";
-                worksheet.Cells[1, 8].Value = "Thể Loại";
-                // Thêm dữ liệu cho từng sản phẩm
-                for (int i = 0; i < productList.Count; i++)
-                {
-                    worksheet.Cells[i + 2, 1].Value = productList[i].ProductId;
-                    worksheet.Cells[i + 2, 2].Value = productList[i].ProductName;
-                    worksheet.Cells[i + 2, 3].Value = productList[i].Price;
-                    worksheet.Cells[i + 2, 4].Value = productList[i].ModelYear;
-                    worksheet.Cells[i + 2, 5].Value = productList[i].Discount;
-                    worksheet.Cells[i + 2, 6].Value = productList[i].Description;
-                    worksheet.Cells[i + 2, 7].Value = productList[i].Image;
-                    worksheet.Cells[i + 2, 8].Value = productList[i].CategoryId;
-                }
-
-                // Tự động điều chỉnh cỡ cột để hiển thị đầy đủ dữ liệu
-                worksheet.Cells.AutoFitColumns();
-
-                // Lưu tệp Excel vào bộ nhớ đệm
-                var stream = new MemoryStream();
-                package.SaveAs(stream);
-
-                // Trả về tệp Excel dưới dạng phản hồi HTTP
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", @"D:\ToyStore\Excel\ListOfProducts.xlsx");
-            }
+            var products = Utilities.SendDataRequest<List<ProductModel>>(ConstantValues.Product.Download);
+            return View(products);
         }
 
         public IActionResult Index(int? categoryId, int pageNo = 1)
@@ -180,7 +186,7 @@ namespace ToyStoreClient.Areas.Admin.Controllers
                     return NotFound();
                 }
 
-                var url = string.Format(ConstantValues.Product.FindProductById, id);
+                var url = string.Format(ConstantValues.Product.GetProductById, id);
                 var product = Utilities.SendDataRequest<ProductModel>(url);
                 if (product == null)
                 {
@@ -287,7 +293,7 @@ namespace ToyStoreClient.Areas.Admin.Controllers
         {
             try
             {
-                var url = string.Format(ConstantValues.Product.FindProductById, id);
+                var url = string.Format(ConstantValues.Product.GetProductById, id);
                 var product = Utilities.SendDataRequest<ProductModel>(url);
                 Utilities.SendDataRequest<bool>(ConstantValues.Product.DeleteProduct, product);
                 return RedirectToAction(nameof(Index));

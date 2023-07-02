@@ -7,6 +7,7 @@ using ToyStoreClient.Models;
 namespace ToyStoreClient.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    //[Authorize(Roles = UserRoles.Admin)]
     public class AuthAdminController : Controller
     {
         public IActionResult Login()
